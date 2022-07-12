@@ -1,0 +1,58 @@
+.body {
+  overflow: hidden;
+
+}
+
+#__login_app {
+  background: url("https://i.pinimg.com/736x/f1/5e/0f/f15e0fdc3c87c48847f76b02adb9c9a4.jpg");
+  background-repeat: no-repeat;
+  background-position-x: unset;
+  background-size: cover;
+}
+
+.container__text {
+
+  text-align: center;
+  text-align: center;
+  align-content: center;
+  margin-top: 100px;
+  overflow: hidden;
+
+
+}
+
+.___posisi {
+  margin-top: 60px;
+  overflow: hidden;
+}
+
+._over_flow {
+  overflow: hidden;
+  margin-top: unset;
+  margin-right: unset;
+  margin-left: unset;
+  color: #fff;
+}
+
+.__sebelah {
+
+  width: 76%;
+  overflow: hidden;
+
+} 
+#adasdsad {
+  margin-top: 10px;
+
+}
+
+@media (max-width: 575.98px) {
+  #bangsat {
+    display: none;
+  }
+
+  #adasdsad {
+    float: right;
+    margin-top: 40px;
+
+  }
+}
