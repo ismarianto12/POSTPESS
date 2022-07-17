@@ -9,7 +9,7 @@ const Dashboard = () => {
     const ll = typeof window != 'undefined' ? localStorage.getItem('username') : null
     useEffect(() => {
         setUsername(ll)
-        if (ll == '' || ll == null) {
+        if (ll == 'undefined' || ll == null) {
             Router.push('/');
         }
         const ctx = document.getElementById('myChart').getContext('2d')
