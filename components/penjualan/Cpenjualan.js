@@ -3,8 +3,8 @@ import * as Icon from 'react-feather'
 import { useState, useEffect } from 'react'
 import Mbarang from '../../helpers/barang'
 
-import { useSelector, useDispatch } from "react-redux";
-import { addUser, deleteUser, updateUsername } from "./actions/Users";
+// import { useSelector, useDispatch } from "react-redux";
+// import { addUser, deleteUser, updateUsername } from "./actions/Users";
 
 
 const Cpenjualan = () => {
