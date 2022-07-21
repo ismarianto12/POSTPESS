@@ -1,13 +1,15 @@
 import Link from "next/link"
 import Router from 'next/router'
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import Template from "../../components/template"
 import { configureStore } from '@reduxjs/toolkit'
 import { useDispatch, useSelector } from "react-redux"
 import { Provider } from "react-redux"
-import jenis from "../../actions/jenis"
 import { Modal } from "react-bootstrap"
 import *  as  Icon from 'react-feather'
+import DataTable from 'react-data-table-component'
+
+
 import {
     getJenis,
     addJenis,
@@ -15,10 +17,67 @@ import {
     updateJenis
 
 } from '../../actions/jenis'
+import { axios } from "axios"
+
+const customStyles = {
+    rows: {
+        style: {
+            minHeight: '72px',
+        },
+    },
+    headCells: {
+        style: {
+            paddingLeft: '8px', // override the cell padding for head cells
+            paddingRight: '8px',
+            fontSize: '25px',
+            fontWeight: 'bold'// override the row height
+
+        },
+    },
+    cells: {
+        style: {
+            paddingLeft: '8px', // override the cell padding for data cells
+            paddingRight: '8px',
+        },
+    },
+};
+
+const columns = [
+    {
+        name: 'Kode',
+        selector: row => row.title,
+    },
+    {
+        name: 'Jenis Barang',
+        selector: row => row.year,
+    },
+    {
+        name: 'action',
+        selector: row => row.action,
+    },
+
+]
+
+const kkk = [
+    {
+        id: 1,
+        title: 'Beetlejuice',
+        year: '1988',
+        action: '1988',
+    },
+    {
+        id: 2,
+        title: 'Ghostbusters',
+        year: '1984',
+        action: '1984',
+
+    },
+]
 
 function Jenis() {
+    const jenisList = useSelector((state) => state.jenis);
+
     const dispatch = useDispatch();
-    const JenisList = useSelector((state) => { [] })
     const [value, setValue] = useState({
         jenis_barang: '',
         kode_barang: ''
@@ -29,19 +88,51 @@ function Jenis() {
 
     const [username, setUsername] = useState('')
     const ll = typeof window != 'undefined' ? localStorage.getItem('username') : null
-    useEffect(() => {
-        setUsername(ll)
-        return () => {
-            if (ll == '' || ll == null) {
-                Router.push('/')
-            }
+    const [data, setData] = useState([])
+
+    const fetchData = () => {
+        const config = {
+            url: '/api/jenis',
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer`,
+                'Content-Type': 'application/json'
+            },
         }
+        axios(config).then((response) => {
+            setData(response.data)
+
+        }).catch((err) => {
+            console.log(err)
+        });
+    }
+
+    useEffect(() => {
+        fetchData
     }, [])
 
-    const Keluar = () => {
-        localStorage.removeItem('username')
-        localStorage.clear()
-    }
+    const [filterText, setFilterText] = useState('');
+    const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+    const filteredItems = kkk.filter(
+        item => item.year && item.title.toLowerCase().includes(filterText.toLowerCase()),
+    );
+
+    const subHeaderComponentMemo = useMemo(() => {
+        const handleClear = () => {
+            if (filterText) {
+                setResetPaginationToggle(!resetPaginationToggle);
+                setFilterText('');
+            }
+        };
+
+        return (
+            <div className="col-md-3">
+                <input type={'text'} className="form-control" onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} placeholder={'Search data here ...'} />
+            </div>
+        );
+    }, [filterText, resetPaginationToggle]);
+
+    console.log(jenisList)
     return (
 
         <Template container={
@@ -64,26 +155,23 @@ function Jenis() {
                         </button>
                     </div>
                 </div>
-                <p>Data Master Jenis Barang</p>
                 <div className="table-responsive">
-                    <table className="table table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Header</th>
-                                <th scope="col">Header</th>
-                                <th scope="col">Header</th>
-                                <th scope="col">Header</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                    <DataTable
+                        title="Jenis Barang"
+                        columns={columns}
+                        data={filteredItems}
+                        pagination
+                        paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
+                        subHeader
+                        subHeaderComponent={subHeaderComponentMemo}
+                        selectableRows
+                        persistTableHead
+                        customStyles={customStyles}
+                    />
                 </div>
-
 
                 <Modal
                     show={show}
-
                     onHide={() => {
                         setShow(false)
                     }}
@@ -102,10 +190,12 @@ function Jenis() {
                             const kode_barang = value.jenis_barang
 
                             status == '_add' ? dispatch(addJenis({
-                                // value.jenis_barang
+                                ...value,
                                 jenis_barang,
                                 kode_barang
                             })) : dispatch(updateJenis({
+                                ...value,
+
                                 jenis_barang,
                                 kode_barang
 

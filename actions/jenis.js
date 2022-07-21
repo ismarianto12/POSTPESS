@@ -1,8 +1,14 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, } from "@reduxjs/toolkit"
+import { axios } from "axios"
 
+
+export async function listData() {
+    const response = await axios('api/jenis')
+    return response.data
+}
 export const jenisSlice = createSlice({
     name: 'jenis',
-    initialState: { value: [] },
+    initialState: listData.getInitialState,
     reducers: {
         getJenis: (state, action) => {
             console.log('rest' + state)
