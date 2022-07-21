@@ -9,7 +9,7 @@ const productEntity = createEntityAdapter({
 
 export const penjualanSlice = createSlice({
     name: 'penjualan',
-    initialState: productEntity.getInitialState,
+    initialState: getProducts.getInitialState,
     reducers: {
         allProduct: (state, action) => {
             // state.value.push(action.payload)
