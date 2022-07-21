@@ -19,70 +19,10 @@ import {
 } from '../../actions/jenis'
 import { axios } from "axios"
 
-const customStyles = {
-    rows: {
-        style: {
-            minHeight: '72px',
-        },
-    },
-    headCells: {
-        style: {
-            paddingLeft: '8px', // override the cell padding for head cells
-            paddingRight: '8px',
-            fontSize: '15px',
-            fontWeight: 'bold'// override the row height
 
-        },
-    },
-    cells: {
-        style: {
-            paddingLeft: '8px', // override the cell padding for data cells
-            paddingRight: '8px',
-        },
-    },
-};
+function Jenis({ lsdata }) {
+    // const jenisList = useSelector((state) => state.jenis);
 
-const columns = [
-    {
-        name: 'Kode',
-        selector: row => row.title,
-    },
-    {
-        name: 'Jenis Barang',
-        selector: row => row.year,
-    },
-    {
-        name: 'Action',
-        button: true,
-        // Width: '200',
-        cell: row => (
-            <>
-                <button className="btn btn-primary btn-sm" onClick={() => { this.Editdata(row.id) }}><i className="fa fa-pencil"></i></button>
-                <button className="btn btn-danger btn-sm" onClick={() => { this.Hapusdata(row.id) }}><i className="fa fa-trash"></i></button>
-            </>
-        ),
-    },
-
-]
-
-const kkk = [
-    {
-        id: 1,
-        title: 'Beetlejuice',
-        year: '1988',
-        action: '1988',
-    },
-    {
-        id: 2,
-        title: 'Ghostbusters',
-        year: '1984',
-        action: '1984',
-
-    },
-]
-
-function Jenis() {
-    const jenisList = useSelector((state) => state.jenis);
 
     const dispatch = useDispatch();
     const [value, setValue] = useState({
@@ -120,9 +60,9 @@ function Jenis() {
 
     const [filterText, setFilterText] = useState('');
     const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-    const filteredItems = kkk.filter(
-        item => item.year && item.title.toLowerCase().includes(filterText.toLowerCase()),
-    );
+    // const filteredItems = lsdata.filter(
+    //     item => item.year && item.title.toLowerCase().includes(filterText.toLowerCase()),
+    // );
 
     const subHeaderComponentMemo = useMemo(() => {
         const handleClear = () => {
@@ -139,11 +79,54 @@ function Jenis() {
         );
     }, [filterText, resetPaginationToggle]);
 
-    console.log(jenisList)
-
-
     const namajdl =
         (<><Icon.Copy /> Jenis Barang </>)
+
+    console.log(lsdata)
+    const customStyles = {
+        rows: {
+            style: {
+                // minHeight: '72px',
+            },
+        },
+        headCells: {
+            style: {
+                // paddingLeft: '8px', // override the cell padding for head cells
+                // paddingRight: '8px',
+                fontSize: '15px',
+                fontWeight: 'bold'// override the row height
+
+            },
+        },
+        cells: {
+            style: {
+                // paddingLeft: '8px', // override the cell padding for data cells
+                // paddingRight: '8px',
+            },
+        },
+    };
+
+    const columns = [
+        {
+            name: 'Kode',
+            selector: row => row.kode,
+        },
+        {
+            name: 'Jenis Barang',
+            selector: row => row.jenis,
+        },
+        {
+            name: 'Action',
+            button: true,
+            cell: row => (
+                <>
+                    <button className="btn btn-primary btn-sm" onClick={() => { this.Editdata(row.id) }}><i className="fa fa-pencil"></i></button>
+                    <button className="btn btn-danger btn-sm" onClick={() => { this.Hapusdata(row.id) }}><i className="fa fa-trash"></i></button>
+                </>
+            ),
+        },
+
+    ]
 
     return (
 
@@ -170,13 +153,13 @@ function Jenis() {
                     <DataTable
                         title={namajdl}
                         columns={columns}
-                        data={filteredItems}
+                        data={lsdata}
                         pagination
-                        paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
+                        // paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
                         subHeader
-                        subHeaderComponent={subHeaderComponentMemo}
-                        selectableRows
-                        persistTableHead
+                        // subHeaderComponent={subHeaderComponentMemo}
+                        // selectableRows
+                        // persistTableHead
                         customStyles={customStyles}
                     />
                 </div>
@@ -255,6 +238,17 @@ function Jenis() {
         } />
 
     )
+}
+
+
+export async function getStaticProps() {
+    const rest = await fetch('http://localhost:3001/api/jenis');
+    const lsdata = await rest.json();
+    return {
+        props: {
+            lsdata,
+        }
+    }
 }
 
 export default Jenis

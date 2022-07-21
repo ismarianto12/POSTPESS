@@ -4,7 +4,7 @@ export default async function handler(req, res) {
         case 'GET':
             let results = await mysql.query('SELECT * FROM jenis')
             await mysql.end()
-            return res.status(200).json({ data: results })
+            return res.status(200).json(results)
             break;
 
         case 'POST':
