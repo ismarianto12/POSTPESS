@@ -29,7 +29,7 @@ const customStyles = {
         style: {
             paddingLeft: '8px', // override the cell padding for head cells
             paddingRight: '8px',
-            fontSize: '25px',
+            fontSize: '15px',
             fontWeight: 'bold'// override the row height
 
         },
@@ -52,8 +52,15 @@ const columns = [
         selector: row => row.year,
     },
     {
-        name: 'action',
-        selector: row => row.action,
+        name: 'Action',
+        button: true,
+        // Width: '200',
+        cell: row => (
+            <>
+                <button className="btn btn-primary btn-sm" onClick={() => { this.Editdata(row.id) }}><i className="fa fa-pencil"></i></button>
+                <button className="btn btn-danger btn-sm" onClick={() => { this.Hapusdata(row.id) }}><i className="fa fa-trash"></i></button>
+            </>
+        ),
     },
 
 ]
@@ -133,14 +140,18 @@ function Jenis() {
     }, [filterText, resetPaginationToggle]);
 
     console.log(jenisList)
+
+
+    const namajdl =
+        (<><Icon.Copy /> Jenis Barang </>)
+
     return (
 
         <Template container={
             <>
 
                 <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 className="h2">{'Master  jenis barang'}</h1>
-                    <div className="btn-toolbar mb-2 mb-md-0">
+                    <div className="btn-toolbar mb-2 mb-md-0" style={{ 'float': 'right' }}>
                         <div className="btn-group me-2">
                             <button type="button" className="btn btn-sm btn-info btn-outline-secondary" onClick={() => {
                                 setShow(true)
@@ -157,7 +168,7 @@ function Jenis() {
                 </div>
                 <div className="table-responsive">
                     <DataTable
-                        title="Jenis Barang"
+                        title={namajdl}
                         columns={columns}
                         data={filteredItems}
                         pagination
