@@ -3,7 +3,7 @@ const mysql = require('serverless-mysql')({
         host: 'localhost',
         database: 'pospess',
         user: 'root',
-        port: 3307,
+        port: 3306,
         password: ''
     }
 })

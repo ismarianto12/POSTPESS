@@ -2,14 +2,16 @@ import '../styles/globals.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from 'react-redux'
-import { jenisReducer } from '../actions/jenis'
+import userSlice from './actions/Users';
+import jenisSlice from '../actions/jenis';
 
 
-function MyApp({ Component, pageProps }) {
+function App({ Component, pageProps }) {
 
   const store = configureStore({
     reducer: {
-      users: jenisReducer,
+      jenis: jenisSlice,
+      users: userSlice
     },
   });
   return (
@@ -19,4 +21,4 @@ function MyApp({ Component, pageProps }) {
   )
 }
 
-export default MyApp
+export default App

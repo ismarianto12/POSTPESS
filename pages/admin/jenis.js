@@ -1,33 +1,29 @@
+
 import Link from "next/link"
 import Router from 'next/router'
 import { useEffect, useState, useMemo } from "react"
 import Template from "../../components/template"
 import { configureStore } from '@reduxjs/toolkit'
-import { useDispatch, useSelector } from "react-redux"
 import { Provider } from "react-redux"
 import { Modal } from "react-bootstrap"
 import *  as  Icon from 'react-feather'
 import DataTable from 'react-data-table-component'
-
+import { useSelector, useDispatch } from "react-redux";
 
 import {
-    getJenis,
-    addJenis,
-    deleteJenis,
-    updateJenis
+    createJenis, updateJenis, deleteJenis
 
 } from '../../actions/jenis'
 import { axios } from "axios"
 
 
 function Jenis({ lsdata }) {
-    // const jenisList = useSelector((state) => state.jenis);
+    const dispacth = useDispatch()
+    const jenisList = useSelector((state) => state.jenis.value);
 
-
-    const dispatch = useDispatch();
     const [value, setValue] = useState({
-        jenis_barang: '',
-        kode_barang: ''
+        kode: '',
+        jenis: ''
     })
     const [show, setShow] = useState(false)
     const [status, setStatus] = useState(false)
@@ -39,7 +35,7 @@ function Jenis({ lsdata }) {
 
     const fetchData = () => {
         const config = {
-            url: '/api/jenis',
+            url: `${process.env.HOSTNAME}/api/jenis`,
             method: 'POST',
             headers: {
                 'Authorization': `Bearer`,
@@ -63,6 +59,12 @@ function Jenis({ lsdata }) {
     // const filteredItems = lsdata.filter(
     //     item => item.year && item.title.toLowerCase().includes(filterText.toLowerCase()),
     // );
+    const Empty = () => {
+        setValue({
+            kode: '',
+            jenis: ''
+        })
+    }
 
     const subHeaderComponentMemo = useMemo(() => {
         const handleClear = () => {
@@ -120,8 +122,8 @@ function Jenis({ lsdata }) {
             button: true,
             cell: row => (
                 <>
-                    <button className="btn btn-primary btn-sm" onClick={() => { this.Editdata(row.id) }}><i className="fa fa-pencil"></i></button>
-                    <button className="btn btn-danger btn-sm" onClick={() => { this.Hapusdata(row.id) }}><i className="fa fa-trash"></i></button>
+                    <button className="btn btn-primary btn-sm" onClick={() => { Editdata(row.id) }}><i className="fa fa-pencil"></i></button>
+                    <button className="btn btn-danger btn-sm" onClick={() => { Hapusdata(row.id) }}><i className="fa fa-trash"></i></button>
                 </>
             ),
         },
@@ -129,7 +131,7 @@ function Jenis({ lsdata }) {
     ]
 
     return (
-
+        console.log('asda' + process.env.HOSTNAME),
         <Template container={
             <>
 
@@ -153,14 +155,11 @@ function Jenis({ lsdata }) {
                     <DataTable
                         title={namajdl}
                         columns={columns}
-                        data={lsdata}
+                        data={jenisList}
                         pagination
-                        // paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
                         subHeader
-                        // subHeaderComponent={subHeaderComponentMemo}
-                        // selectableRows
-                        // persistTableHead
-                        customStyles={customStyles}
+                        selectableRows
+                        persistTableHead
                     />
                 </div>
 
@@ -180,38 +179,32 @@ function Jenis({ lsdata }) {
                     <Modal.Body>
                         <form className="form-horizontal" method="post" onSubmit={(e) => {
                             e.preventDefault()
-                            const jenis_barang = value.jenis_barang
-                            const kode_barang = value.jenis_barang
-
-                            status == '_add' ? dispatch(addJenis({
-                                ...value,
-                                jenis_barang,
-                                kode_barang
-                            })) : dispatch(updateJenis({
-                                ...value,
-
-                                jenis_barang,
-                                kode_barang
-
+                            const jenis = value.jenis
+                            const kode = value.kode
+                            dispacth(createJenis({
+                                id: Math.random(),
+                                jenis: jenis,
+                                kode: kode
                             }))
-
+                            Empty
+                            setShow(false)
                         }}>
                             <div className="form-group row">
                                 <label className="col-md-3">Jenis Barang</label>
                                 <div className="col-md-3">
-                                    <input type="text" name="jenis_barang" value={value.jenis_barang} className="form-control" onChange={(e) => {
+                                    <input type="text" name="jenis_barang" value={value.jenis} className="form-control" onChange={(e) => {
                                         setValue({
                                             ...value,
-                                            [e.target.name]: e.target.value,
+                                            jenis: e.target.value,
                                         })
                                     }} />
                                 </div>
                                 <label className="col-md-3">Kode</label>
                                 <div className="col-md-3">
-                                    <input type="text" name="kode_barang" value={value.kode_barang} onChange={(e) => {
+                                    <input type="text" name="kode_barang" value={value.kode} onChange={(e) => {
                                         setValue({
                                             ...value,
-                                            [e.target.name]: e.target.value,
+                                            kode: e.target.value,
 
                                         })
                                     }} className="form-control" />
@@ -242,7 +235,7 @@ function Jenis({ lsdata }) {
 
 
 export async function getStaticProps() {
-    const rest = await fetch('http://localhost:3001/api/jenis');
+    const rest = await fetch(process.env.HOSTNAME + `/api/jenis`);
     const lsdata = await rest.json();
     return {
         props: {
