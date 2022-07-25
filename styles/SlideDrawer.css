@@ -19,3 +19,24 @@
     transform: translateX(0);
     /* transform: translateX(100%); */
 }
+
+@media (max-width: 767.98px) {
+    .side-drawer {
+        /* In commentaries are the way to make it slide from left to right */
+        position: fixed;
+        overflow: auto;
+        height: 100%;
+        background: rgb(252, 252, 252);
+        top: 15;
+        right: 0;
+        /* right: 100%; */
+        width: 90%;
+        z-index: 900;
+        box-shadow: 1px 0px 7px rgba(255, 255, 255, 0.5);
+        transform: translateX(100%);
+        /* transform: translateX(0%); */
+        transition: transform 0.3s ease-out;
+    }
+
+
+}
