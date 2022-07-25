@@ -3,26 +3,26 @@ import { axios } from "axios"
 
 
 export async function listData() {
-    const response = await axios('api/jenis')
+    const response = await axios('api/barang')
     return response.data
 }
-export const jenisSlice = createSlice({
-    name: 'jenis',
+export const barangSlice = createSlice({
+    name: 'barang',
     initialState: { value: [] },
     reducers: {
-        createJenis: (state, action) => {
+        createbarang: (state, action) => {
             state.value.push(action.payload)
             console.log('test' + action.payload.id)
         },
-        deleteJenis: (state, action) => {
+        deletebarang: (state, action) => {
             state.value.push(action, payload)
         },
-        updateJenis: (state, action) => {
+        updatebarang: (state, action) => {
             state.value.push(action, payload)
             console.log(action.payload)
         },
 
     }
 })
-export const { createJenis, deleteJenis, updateJenis } = jenisSlice.actions
-export default jenisSlice.reducer
+export const { createbarang, deletebarang, updatebarang } = barangSlice.actions
+export default barangSlice.reducer
